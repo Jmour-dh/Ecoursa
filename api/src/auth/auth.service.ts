@@ -2,10 +2,14 @@ import { PrismaService } from './../prisma/prisma.service';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { SignupDto } from './dto/signupDto';
 import * as bcrypt from 'bcrypt';
+import { MailerService } from 'src/mailer/mailer.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly PrismaService: PrismaService) {}
+  constructor(
+    private readonly PrismaService: PrismaService,
+    private readonly mailerService: MailerService,
+  ) {}
   async signup(signupDto: SignupDto) {
     const { firstname, lastname, email, password, imageProfile } = signupDto;
     // ** Vérifier si l'utilisateur est déjà inscrit **
@@ -24,6 +28,8 @@ export class AuthService {
         is_admin: false,
       },
     });
+    // ** Envoyer un email de confirmation **
+    await this.mailerService.sendSignupConformation(email);
     return { data: 'Utilisateur inscrit avec succes' };
   }
 }
