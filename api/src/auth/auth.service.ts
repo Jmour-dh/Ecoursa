@@ -1,8 +1,8 @@
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from './../prisma/prisma.service';
 import {
-  ConflictException,
   Injectable,
+  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { SignupDto } from './dto/signupDto';
@@ -13,6 +13,7 @@ import { SigninDto } from './dto/signinDto';
 import { JwtService } from '@nestjs/jwt';
 import { ResetPasswordDemandDto } from './dto/resetPasswordDemandDto';
 import { ResetPasswordConfirmationDto } from './dto/resetPasswordConfirmationDto';
+import { DeleteAccountDto } from './dto/deleteAccountDto';
 
 @Injectable()
 export class AuthService {
@@ -26,7 +27,7 @@ export class AuthService {
     const { firstname, lastname, email, password, imageProfile } = signupDto;
     // ** Vérifier si l'utilisateur est déjà inscrit **
     const user = await this.PrismaService.user.findUnique({ where: { email } });
-    if (user) throw new ConflictException('Cet utilisateur est déjà inscrit');
+    if (user) throw new NotFoundException('Cet utilisateur est déjà inscrit');
     // ** Hasher le mot de passe **
     const hash = await bcrypt.hash(password, 10);
     // ** Enregistrer l'utilisateur dans la base de données **
@@ -49,7 +50,7 @@ export class AuthService {
     const { email, password } = signinDto;
     /** Vérifier si l'utilisateur est inscrit */ const user =
       await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new ConflictException("Cet utilisateur n'est pas inscrit");
+    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
     /**Comparer le mot de passe */
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new UnauthorizedException('Mot de passe incorrect');
@@ -74,7 +75,7 @@ export class AuthService {
     const { email } = resetPasswordDemandDto;
     /** Vérifier si l'utilisateur est inscrit */ const user =
       await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new ConflictException("Cet utilisateur n'est pas inscrit");
+    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
     const code = speakeasy.totp({
       secret: this.ConfigService.get('OTP_CODE'),
       digits: 5,
@@ -92,14 +93,14 @@ export class AuthService {
     const { email, code, password } = resetPasswordConfirmationDto;
     /** Vérifier si l'utilisateur est inscrit */
     const user = await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new ConflictException("Cet utilisateur n'est pas inscrit");
+    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
     const match = speakeasy.totp.verify({
       secret: this.ConfigService.get('OTP_CODE'),
       token: code,
       digits: 5,
       step: 60 * 15,
       encoding: 'base32',
-    })
+    });
     if (!match) throw new UnauthorizedException('Code incorrect/token expire');
     const hash = await bcrypt.hash(password, 10);
     await this.PrismaService.user.update({
@@ -107,5 +108,18 @@ export class AuthService {
       data: { password: hash },
     });
     return { data: 'Mot de passe mis à jour' };
+  }
+
+  async deleteAccount(id: number, deleteAccountDto: DeleteAccountDto) {
+    const { password } = deleteAccountDto;
+    /** Vérifier si l'utilisateur est inscrit */
+    const user = await this.PrismaService.user.findUnique({
+      where: { id },
+    });
+    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) throw new UnauthorizedException('Mot de passe incorrect');
+    await this.PrismaService.user.delete({ where: { id } });
+    return { data: 'Compte supprimé' };
   }
 }
