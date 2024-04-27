@@ -14,13 +14,59 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  firstname    String   @db.VarChar(65)
-  lastname     String   @db.VarChar(65)
-  imageProfile String?  @db.VarChar(255)
-  email        String   @unique @db.VarChar(255)
-  password     String   @db.VarChar(255)
+  id           Int           @id @default(autoincrement())
+  firstname    String        @db.VarChar(65)
+  lastname     String        @db.VarChar(65)
+  imageProfile String?       @db.VarChar(255)
+  email        String        @unique @db.VarChar(255)
+  password     String        @db.VarChar(255)
   is_admin     Boolean
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  formations   Formation[]
+  progressions Progression[]
+}
+
+model Formation {
+  id           Int           @id @default(autoincrement())
+  title        String        @db.VarChar(65)
+  description  String        @db.VarChar(255)
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  admin        User          @relation(fields: [adminId], references: [id])
+  adminId      Int
+  cours        Cours[]
+  progressions Progression[]
+}
+
+model Cours {
+  id           Int           @id @default(autoincrement())
+  title        String        @db.VarChar(65)
+  description  String        @db.VarChar(255)
+  created_at   DateTime      @default(now())
+  updated_at   DateTime      @updatedAt
+  formation    Formation     @relation(fields: [formationId], references: [id])
+  formationId  Int
+  video        Video         @relation(fields: [videoId], references: [id])
+  videoId      Int           @unique
+  progressions Progression[]
+}
+
+model Video {
+  id         Int      @id @default(autoincrement())
+  title      String   @db.VarChar(65)
+  link       String   @db.VarChar(255)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  cours      Cours?
+}
+
+model Progression {
+  id          Int       @id @default(autoincrement())
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  formation   Formation @relation(fields: [formationId], references: [id])
+  formationId Int
+  cours       Cours?    @relation(fields: [coursId], references: [id])
+  coursId     Int?
 }
