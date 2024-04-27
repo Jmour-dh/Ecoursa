@@ -5,8 +5,8 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { CreateFormationDto } from './dto/createFormationDto';
-import { UpdateFormationDto } from './dto/updateFormationDto';
+import { CreateFormationDto } from './dto/createFormation.dto';
+import { UpdateFormationDto } from './dto/updateFormation.dto';
 
 @Injectable()
 export class FormationService {

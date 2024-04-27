@@ -12,10 +12,12 @@ import {
 } from '@nestjs/common';
 import { FormationService } from './formation.service';
 import { AuthGuard } from '@nestjs/passport';
-import { CreateFormationDto } from './dto/createFormationDto';
+import { CreateFormationDto } from './dto/createFormation.dto';
 import { Request } from 'express';
-import { UpdateFormationDto } from './dto/updateFormationDto';
+import { UpdateFormationDto } from './dto/updateFormation.dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Formation')
 @Controller('formations')
 export class FormationController {
   constructor(private readonly formationService: FormationService) {}
@@ -25,6 +27,7 @@ export class FormationController {
     return this.formationService.findAll();
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('create')
   create(
@@ -35,13 +38,14 @@ export class FormationController {
     return this.formationService.create(createFormationDto, userId);
   }
 
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Delete('delete/:id')
   delete(@Param('id', ParseIntPipe) id: number, @Req() request: Request) {
     const adminId = request.user['id'];
     return this.formationService.delete(id, adminId);
   }
-
+  @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Put('update/:id')
   update(
