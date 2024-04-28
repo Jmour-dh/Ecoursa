@@ -1,16 +1,19 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 export class UpdateFormationDto {
   @ApiPropertyOptional()
   @IsNotEmpty()
+  @IsString()
   @IsOptional()
-  readonly title?: string;
+  readonly title: string;
   @ApiPropertyOptional()
   @IsNotEmpty()
+  @IsString()
   @IsOptional()
-  readonly logo?: string;
+  readonly logo: string;
   @ApiPropertyOptional()
   @IsNotEmpty()
+  @IsString()
   @IsOptional()
   readonly description?: string;
 }

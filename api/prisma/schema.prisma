@@ -64,6 +64,7 @@ model Video {
 
 model Progression {
   id          Int       @id @default(autoincrement())
+  percentage  Float     @default(0)  
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
   formation   Formation @relation(fields: [formationId], references: [id])
