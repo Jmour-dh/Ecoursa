@@ -14,7 +14,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreateCoursDto } from './dto/createCours.dto';
 import { UpdateCoursDto } from './dto/updateCours.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { REDIRECT_METADATA } from '@nestjs/common/constants';
 
 @ApiTags('Cours')
 @Controller('cours')

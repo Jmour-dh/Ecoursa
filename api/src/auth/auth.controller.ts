@@ -1,4 +1,15 @@
-import { Controller, Post, Body, Delete, UseGuards, Req } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Delete,
+  UseGuards,
+  Req,
+  Put,
+  Param,
+  ParseIntPipe,
+  Get,
+} from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
 import { SigninDto } from './dto/signin.dto';
@@ -8,6 +19,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { DeleteAccountDto } from './dto/deleteAccount.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { UpdateAccountDto } from './dto/updateAccount.dto';
 
 @ApiTags('Authentification')
 @Controller('auth')
@@ -47,5 +59,21 @@ export class AuthController {
   ) {
     const userId = request.user['id'];
     return this.authService.deleteAccount(userId, deleteAccountDto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Put('update')
+  update(@Body() updateAccountDto: UpdateAccountDto, @Req() request: Request) {
+    const userId = request.user['id'];
+    const email =request.user['email'];
+    return this.authService.update(userId,email, updateAccountDto);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get()
+  getAll() {
+    return this.authService.getAll();
   }
 }

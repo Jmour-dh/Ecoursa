@@ -1,16 +1,17 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional } from 'class-validator';
-export class UpdateFormationDto {
+
+export class UpdateVideoDto {
   @ApiPropertyOptional()
   @IsNotEmpty()
   @IsOptional()
-  readonly title?: string;
+  readonly title: string;
   @ApiPropertyOptional()
   @IsNotEmpty()
   @IsOptional()
-  readonly logo?: string;
+  readonly link: string;
   @ApiPropertyOptional()
   @IsNotEmpty()
   @IsOptional()
-  readonly description?: string;
+  readonly coursId: number;
 }

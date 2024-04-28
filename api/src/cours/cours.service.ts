@@ -10,6 +10,9 @@ export class CoursService {
  async getAllByFormation(formationId: number) {
     const cours = await this.prismaService.cours.findMany({
       where: { formationId },
+      include: {
+        video: true,
+      },
     });
     if (!cours || cours.length === 0) {
       throw new NotFoundException("Aucun cours trouvé pour cette formation");

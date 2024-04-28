@@ -27,6 +27,11 @@ export class FormationController {
     return this.formationService.findAll();
   }
 
+  @Get(':id')
+  getOne(@Param('id', ParseIntPipe) id: number) {
+    return this.formationService.findOne(id);
+  }
+
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Post('create')

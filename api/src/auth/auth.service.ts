@@ -14,11 +14,14 @@ import { JwtService } from '@nestjs/jwt';
 import { ResetPasswordDemandDto } from './dto/resetPasswordDemand.dto';
 import { ResetPasswordConfirmationDto } from './dto/resetPasswordConfirmation.dto';
 import { DeleteAccountDto } from './dto/deleteAccount.dto';
+import { UtilsService } from 'src/utils/utils.service';
+import { UpdateAccountDto } from './dto/updateAccount.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly PrismaService: PrismaService,
+    private readonly utilsService: UtilsService,
     private readonly mailerService: MailerService,
     private readonly JwtService: JwtService,
     private readonly ConfigService: ConfigService,
@@ -26,8 +29,9 @@ export class AuthService {
   async signup(signupDto: SignupDto) {
     const { firstname, lastname, email, password, imageProfile } = signupDto;
     // ** Vérifier si l'utilisateur est déjà inscrit **
-    const user = await this.PrismaService.user.findUnique({ where: { email } });
-    if (user) throw new NotFoundException('Cet utilisateur est déjà inscrit');
+    const isRegistered = await this.utilsService.isUserRegistered(email);
+    if (isRegistered)
+      throw new NotFoundException('Cet utilisateur est déjà inscrit');
     // ** Hasher le mot de passe **
     const hash = await bcrypt.hash(password, 10);
     // ** Enregistrer l'utilisateur dans la base de données **
@@ -48,14 +52,23 @@ export class AuthService {
 
   async signin(signinDto: SigninDto) {
     const { email, password } = signinDto;
-    /** Vérifier si l'utilisateur est inscrit */ const user =
-      await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    /** Vérifier si l'utilisateur est inscrit */
+    const isRegistered = await this.utilsService.isUserRegistered(email);
+    if (!isRegistered) {
+      throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    }
+
+    // Récupérer les informations de l'utilisateur depuis la base de données
+    const user = await this.PrismaService.user.findUnique({ where: { email } });
     /**Comparer le mot de passe */
     const match = await bcrypt.compare(password, user.password);
     if (!match) throw new UnauthorizedException('Mot de passe incorrect');
     /**Retourner un token JWT */
-    const payload = { sub: user.id, email: user.email };
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      is_admin: user.is_admin,
+    };
     const token = this.JwtService.sign(payload, {
       expiresIn: '1d',
       secret: this.ConfigService.get('SECRET_KEY'),
@@ -67,15 +80,18 @@ export class AuthService {
         lastname: user.lastname,
         email: user.email,
         imageProfile: user.imageProfile,
+        is_admin: user.is_admin,
       },
     };
   }
 
   async resetPasswordDemand(resetPasswordDemandDto: ResetPasswordDemandDto) {
     const { email } = resetPasswordDemandDto;
-    /** Vérifier si l'utilisateur est inscrit */ const user =
-      await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    /** Vérifier si l'utilisateur est inscrit */
+    const isRegistered = await this.utilsService.isUserRegistered(email);
+    if (!isRegistered) {
+      throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    }
     const code = speakeasy.totp({
       secret: this.ConfigService.get('OTP_CODE'),
       digits: 5,
@@ -92,8 +108,10 @@ export class AuthService {
   ) {
     const { email, code, password } = resetPasswordConfirmationDto;
     /** Vérifier si l'utilisateur est inscrit */
-    const user = await this.PrismaService.user.findUnique({ where: { email } });
-    if (!user) throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    const isRegistered = await this.utilsService.isUserRegistered(email);
+    if (!isRegistered) {
+      throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    }
     const match = speakeasy.totp.verify({
       secret: this.ConfigService.get('OTP_CODE'),
       token: code,
@@ -121,5 +139,32 @@ export class AuthService {
     if (!match) throw new UnauthorizedException('Mot de passe incorrect');
     await this.PrismaService.user.delete({ where: { id } });
     return { data: 'Compte supprimé' };
+  }
+
+  async update(
+    userId: number,
+    email: string,
+    updateAccountDto: UpdateAccountDto,
+  ) {
+    const isRegistered = await this.utilsService.isUserRegistered(email);
+    if (!isRegistered) {
+      throw new NotFoundException("Cet utilisateur n'est pas inscrit");
+    }
+    await this.PrismaService.user.update({
+      where: { id: userId },
+      data: { ...updateAccountDto },
+    });
+    return { data: 'Compte mis à jour' };
+  }
+
+  async getAll() {
+    return await this.PrismaService.user.findMany({
+      where: { is_admin: false },
+      include: {
+        progressions: true,
+      },
+    }).then(users =>
+      users.map(({ password, ...user }) => user)
+    );
   }
 }

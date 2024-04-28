@@ -7,10 +7,14 @@ import {
 } from '@nestjs/common';
 import { CreateFormationDto } from './dto/createFormation.dto';
 import { UpdateFormationDto } from './dto/updateFormation.dto';
+import { UtilsService } from 'src/utils/utils.service';
 
 @Injectable()
 export class FormationService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly utilsService: UtilsService,
+  ) {}
 
   async findAll() {
     return await this.prismaService.formation.findMany({
@@ -20,21 +24,26 @@ export class FormationService {
     });
   }
 
-  async create(createFormationDto: CreateFormationDto, adminId: number) {
-    // Vérifier si l'utilisateur est un administrateur
-    const admin = await this.prismaService.user.findUnique({
-      where: { id: adminId },
+  findOne(id: number) {
+    return this.prismaService.formation.findUnique({
+      where: { id },
+      include: { cours: true },
     });
-    if (!admin || !admin.is_admin) {
+  }
+
+  async create(createFormationDto: CreateFormationDto, adminId: number) {
+    const { title, logo, description } = createFormationDto;
+    // Vérifier si l'utilisateur est un administrateur
+    const isAdmin = await this.utilsService.isAdmin(adminId);
+    if (!isAdmin) {
       throw new UnauthorizedException(
         'Seuls les administrateurs peuvent créer une formation',
       );
     }
-
-    const { title, description } = createFormationDto;
     await this.prismaService.formation.create({
       data: {
         title,
+        logo,
         description,
         adminId,
       },
@@ -43,12 +52,10 @@ export class FormationService {
   }
 
   async delete(id: number, adminId: number) {
-    const admin = await this.prismaService.user.findUnique({
-      where: { id: adminId },
-    });
-    if (!admin || !admin.is_admin) {
+    const isAdmin = await this.utilsService.isAdmin(adminId);
+    if (!isAdmin) {
       throw new UnauthorizedException(
-        'Seuls les administrateurs peuvent supprimer une formation',
+        'Seuls les administrateurs peuvent créer une formation',
       );
     }
     // Vérifier si la formation existe
@@ -70,12 +77,10 @@ export class FormationService {
     adminId: number,
     updateFormationDto: UpdateFormationDto,
   ) {
-    const admin = await this.prismaService.user.findUnique({
-      where: { id: adminId },
-    });
-    if (!admin || !admin.is_admin) {
+    const isAdmin = await this.utilsService.isAdmin(adminId);
+    if (!isAdmin) {
       throw new UnauthorizedException(
-        'Seuls les administrateurs peuvent supprimer une formation',
+        'Seuls les administrateurs peuvent créer une formation',
       );
     }
     const formation = await this.prismaService.formation.findUnique({

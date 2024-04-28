@@ -31,6 +31,7 @@ model Formation {
   id           Int           @id @default(autoincrement())
   title        String        @db.VarChar(65)
   description  String        @db.VarChar(255)
+  logo         String        @db.VarChar(255)
   created_at   DateTime      @default(now())
   updated_at   DateTime      @updatedAt
   admin        User          @relation(fields: [adminId], references: [id])
@@ -40,16 +41,15 @@ model Formation {
 }
 
 model Cours {
-  id           Int           @id @default(autoincrement())
-  title        String        @db.VarChar(65)
-  link  String        @db.VarChar(255)
-  created_at   DateTime      @default(now())
-  updated_at   DateTime      @updatedAt
-  formation    Formation     @relation(fields: [formationId], references: [id])
-  formationId  Int
-  // video        Video         @relation(fields: [videoId], references: [id])
-  // videoId      Int           @unique
-  // progressions Progression[]
+  id          Int           @id @default(autoincrement())
+  title       String        @db.VarChar(65)
+  link        String        @db.VarChar(255)
+  created_at  DateTime      @default(now())
+  updated_at  DateTime      @updatedAt
+  formation   Formation     @relation(fields: [formationId], references: [id])
+  formationId Int
+  video       Video[]
+  Progression Progression[]
 }
 
 model Video {
@@ -58,7 +58,8 @@ model Video {
   link       String   @db.VarChar(255)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  // cours      Cours?
+  cours      Cours    @relation(fields: [coursId], references: [id])
+  coursId    Int
 }
 
 model Progression {
@@ -67,6 +68,6 @@ model Progression {
   userId      Int
   formation   Formation @relation(fields: [formationId], references: [id])
   formationId Int
-  // cours       Cours?    @relation(fields: [coursId], references: [id])
-  // coursId     Int?
+  cours       Cours     @relation(fields: [coursId], references: [id])
+  coursId     Int
 }
