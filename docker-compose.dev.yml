@@ -12,6 +12,8 @@ services:
       - 3001:3001
     environment:
       - DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa?schema=public
+      - SMTP_HOST=mailhog
+      - SMTP_PORT=1025
 
   db:
     container_name: postgresprisma
@@ -23,9 +25,14 @@ services:
       POSTGRES_DB: ecoursa
     ports:
       - 5432:5432
-
     volumes:
       - pgdata:/var/lib/postgresql/data
+
+  mailhog:
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025  
+      - 8025:8025  
 
 volumes:
   pgdata: {}
