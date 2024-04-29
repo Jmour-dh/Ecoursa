@@ -1,0 +1,23 @@
+FROM node:lts-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install
+
+COPY prisma ./prisma
+
+RUN npx prisma generate
+
+# Définition de l'environnement variable DATABASE_URL pour la migration Prisma
+ENV DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa?schema=public
+
+# Exécution de la migration Prisma
+RUN npx prisma migrate dev 
+
+COPY . .
+
+EXPOSE 3001
+
+CMD ["npm","run", "start:dev"]

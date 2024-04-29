@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./api/src
+        target: /app/src
+    ports:
+      - 3001:3001
+    environment:
+      - DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa?schema=public
+
+  db:
+    container_name: postgresprisma
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: ecoursa
+    ports:
+      - 5432:5432
+
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata: {}
