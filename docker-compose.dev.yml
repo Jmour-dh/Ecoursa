@@ -1,20 +1,22 @@
-version: '3.8'
+version: '3.9'
 services:
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile.dev
+    ports:
+      - '3050:80'
   api:
     build:
-      context: ./api
       dockerfile: Dockerfile.dev
+      context: ./api
     volumes:
-      - type: bind
-        source: ./api/src
-        target: /app/src
-    ports:
-      - 3001:3001
-    environment:
-      - DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa?schema=public
-      - SMTP_HOST=mailhog
-      - SMTP_PORT=1025
-
+      - /app/node_modules
+      - ./api:/app 
   db:
     container_name: postgresprisma
     image: postgres:latest
@@ -24,15 +26,24 @@ services:
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: ecoursa
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   mailhog:
     image: mailhog/mailhog
     ports:
-      - 1025:1025  
-      - 8025:8025  
-
+      - "1025:1025"
+      - "8025:8025"    
+  client:
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app   
 volumes:
-  pgdata: {}
+  pgdata: {}      
