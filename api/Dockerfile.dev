@@ -16,8 +16,4 @@ RUN npx prisma migrate dev
 
 COPY . .
 
-EXPOSE 80
-
-USER node
-
 CMD ["npm", "run", "start:dev"]
