@@ -1,24 +1,30 @@
-version: '3.9'
+version: '3.8'
+
 services:
-  nginx:
+  nginx_dev:
+    container_name: nginx_dev
     depends_on:
-      - api
-      - client
+      - api_dev
+      - client_dev
+      - db_dev
     restart: always
     build:
       context: ./nginx
       dockerfile: Dockerfile.dev
     ports:
       - '3050:80'
-  api:
+
+  api_dev:
+    container_name: api_dev
     build:
       dockerfile: Dockerfile.dev
       context: ./api
     volumes:
       - /app/node_modules
       - ./api:/app 
-  db:
-    container_name: postgresprisma
+
+  db_dev:
+    container_name: db_dev
     image: postgres:latest
     restart: always
     environment:
@@ -30,12 +36,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  mailhog:
+  mailhog_dev:
+    container_name: mailhog_dev
     image: mailhog/mailhog
     ports:
       - "1025:1025"
       - "8025:8025"    
-  client:
+
+  client_dev:
+    container_name: client_dev
     stdin_open: true
     environment:
       WATCHPACK_POLLING: "true"
@@ -45,5 +54,6 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app   
+
 volumes:
-  pgdata: {}      
+  pgdata: {}

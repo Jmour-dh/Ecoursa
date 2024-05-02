@@ -10,7 +10,7 @@ COPY prisma ./prisma
 
 RUN npx prisma generate
 
-ENV DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa?schema=public
+ENV DATABASE_URL=postgresql://postgres:123@host.docker.internal:5432/ecoursa_prod?schema=public
 
 RUN npx prisma migrate dev 
 

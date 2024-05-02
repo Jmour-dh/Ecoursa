@@ -1,44 +1,49 @@
 version: '3.8'
+
 services:
-  nginx:
+  nginx_prod:
+    container_name: nginx_prod
     depends_on:
-      - api
-      - db
-      - client
+      - api_prod
+      - client_prod
+      - db_prod
     restart: unless-stopped
     build:
       context: ./nginx
       dockerfile: Dockerfile.prod
-    # extra_hosts:
-    #   - "host.docker.internal:host-gateway"
     ports:
       - "80:80"
 
-  api:
+  api_prod:
+    container_name: api_prod
     restart: unless-stopped
     build:
       dockerfile: Dockerfile.prod
       context: ./api
 
-  db:
-    container_name: postgresprismaprod
+  db_prod:
+    container_name: db_prod
     image: postgres:latest
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: ecoursa
+      POSTGRES_DB: ecoursa_prod
     ports:
-      - 5432:5432
+      - 543:5432
+    volumes:
+      - pgdata_prod:/var/lib/postgresql/data  
 
-  mailhog:
+  mailhog_prod:
+    container_name: mailhog_prod
     image: mailhog/mailhog
     restart: unless-stopped
     ports:
-      - 1025:1025
-      - 8025:8025  
+      - 1026:1025
+      - 8026:8025  
 
-  client:
+  client_prod:
+    container_name: client_prod
     stdin_open: true
     environment:
       WATCHPACK_POLLING: "true"
@@ -46,5 +51,6 @@ services:
     build:
       dockerfile: Dockerfile.prod
       context: ./client 
+
 volumes:
-  pgdataprod: {}
+  pgdata_prod: {}
