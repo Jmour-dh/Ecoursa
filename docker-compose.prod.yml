@@ -20,6 +20,9 @@ services:
     build:
       dockerfile: Dockerfile.prod
       context: ./api
+    environment:
+      - SMTP_HOST=mailhog_prod
+      - SMTP_PORT=1025
 
   db_prod:
     container_name: db_prod
@@ -36,11 +39,15 @@ services:
 
   mailhog_prod:
     container_name: mailhog_prod
-    image: mailhog/mailhog
+    image: mailhog/mailhog:latest
     restart: unless-stopped
     ports:
       - 1026:1025
       - 8026:8025  
+    environment:
+      MH_STORAGE: memory  # Correction du type de stockage
+    volumes:
+      - maildir_prod:/tmp   
 
   client_prod:
     container_name: client_prod
@@ -54,3 +61,4 @@ services:
 
 volumes:
   pgdata_prod: {}
+  maildir_prod: {}
