@@ -45,7 +45,7 @@ services:
       - 1026:1025
       - 8026:8025  
     environment:
-      MH_STORAGE: memory  # Correction du type de stockage
+      MH_STORAGE: memory 
     volumes:
       - maildir_prod:/tmp   
 
