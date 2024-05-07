@@ -1,8 +1,18 @@
-import React from 'react'
+import React,{Suspense} from 'react'
+import { Outlet } from 'react-router-dom'
+import Header from './Header'
+import Footer from './Footer'
 
-function App() {
+const  App: React.FC = () => {
   return (
-    <div className="underline">App dhia edd hh oo kkk ccc dd</div>
+    <>
+    <Header/>
+    <Suspense>
+     <Outlet/>
+    </Suspense>    
+    <Footer/>
+    </>
+    
   )
 }
 
