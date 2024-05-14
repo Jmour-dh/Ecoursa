@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+ENV VITE_API_URL=http://localhost:3050/api
+
 EXPOSE 3000
 
 CMD ["npm", "run", "dev"]

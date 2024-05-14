@@ -32,6 +32,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: ecoursa_prod
+      NODE_ENV: production
     ports:
       - 543:5432
     volumes:

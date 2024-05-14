@@ -34,6 +34,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 123
       POSTGRES_DB: ecoursa
+      NODE_ENV: development
     ports:
       - "5432:5432"
     volumes:
@@ -60,9 +61,10 @@ services:
       - /app/node_modules
       - ./client:/app   
     environment:
-    - WDS_SOCKET_HOST=127.0.0.1 
-    - CHOKIDAR_USEPOLLING=true
-    - WATCHPACK_POLLING=true
+      - WDS_SOCKET_HOST=127.0.0.1 
+      - CHOKIDAR_USEPOLLING=true
+      - WATCHPACK_POLLING=true
+
 volumes:
   pgdata: {}
   maildir: {}

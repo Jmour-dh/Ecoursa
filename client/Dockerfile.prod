@@ -8,6 +8,8 @@ RUN npm install
 
 COPY . .
 
+ENV VITE_API_URL=http://localhost/api
+
 RUN npm run build
 
 CMD [ "npm", "run" , "preview" ]
