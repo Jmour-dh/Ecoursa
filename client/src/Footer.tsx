@@ -9,7 +9,7 @@ const Footer: React.FC= () => {
   const date = new Date();
   const year = date.getFullYear();
   return (
-    <div className="min-h-64 bg-violent-violet-300 flex  justify-around pt-10">
+    <footer className="min-h-64 bg-violent-violet-300 flex  justify-around pt-10">
       <div className='flex items-start flex-col'>
         <img  src={logo} alt="logo" />
         <span className='my-3'>© {year} Ecoursa </span>
@@ -40,7 +40,7 @@ const Footer: React.FC= () => {
         <NavLink to={'#'}className='underline'>Blog</NavLink>
         <span className='my-3'> Vous avez une question? <br/> contact@ecoursa.fr</span>
       </div>
-    </div>
+    </footer>
   )
 }
 

@@ -19,7 +19,7 @@ const Header: React.FC = () => {
         </ul>
       </nav>
 
-      <div className='flex items-center gap-x-4'>
+      <div className='flex items-center gap-x-5'>
         <ul>
         <NavLink to={'/login'}>Connexion</NavLink>
         </ul>
