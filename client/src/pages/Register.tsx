@@ -12,6 +12,8 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [generalError, setGeneralError] = useState<string | null>(null);
   const [formData, setFormData] = useState<User>({
     firstname: '',
     lastname: '',
@@ -19,7 +21,6 @@ const Register: React.FC = () => {
     password: '',
     confirmPassword: ''
   });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   const validationSchema = yup.object().shape({
     firstname: yup
@@ -67,9 +68,10 @@ const Register: React.FC = () => {
     try {
       await validationSchema.validate(formData, { abortEarly: false });
       setErrors({});
+      setGeneralError(null);
       await createUser(formData);
       navigate('/login');
-    } catch (err) {
+    } catch (err :any) {
       if (err instanceof yup.ValidationError) {
         const validationErrors: { [key: string]: string } = {};
         err.inner.forEach((error) => {
@@ -79,7 +81,7 @@ const Register: React.FC = () => {
         });
         setErrors(validationErrors);
       } else {
-        console.error(err);
+        setGeneralError(err.message);
       }
     }
   };
@@ -95,6 +97,7 @@ const Register: React.FC = () => {
             <h4 className="font-bold">Inscription</h4>
             <FaLock className="text-gray-400"/>
           </div>
+          {generalError && <div className="text-red-500 mb-2">{generalError}</div>}
           <div className="flex w-[355px] justify-between">
             <div className="flex flex-col w-[43%] ">
               <label className="mb-1" htmlFor="firstname">Prénom</label>
