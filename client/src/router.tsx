@@ -7,6 +7,7 @@ const Login = lazy(() => import("./pages/Login"));
 const Register = lazy(() => import("./pages/Register"));
 const Tarifs = lazy(() => import("./pages/Tarifs"));
 const ProfileUser = lazy(() => import("./pages//ProfileUser/ProfileUser"));
+const ProfileAdmin = lazy(() => import("./pages/ProfileAdmin/ProfileAdmin"));
 
 export const router = createBrowserRouter([
   {
@@ -32,6 +33,10 @@ export const router = createBrowserRouter([
       {
         path:'/profileUser',
         element: <ProfileUser/>
+      },
+      {
+        path:'/profileAdmin',
+        element: <ProfileAdmin/>
       }
     ],
   },

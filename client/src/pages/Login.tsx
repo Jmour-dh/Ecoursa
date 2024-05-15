@@ -12,7 +12,9 @@ import { UserAuth }  from "../interfaces/Auth.interface";
 
 const Login: React.FC = () => {
   const authContext = useContext(AuthContext);
-  const { signin, user } = authContext || {}
+  const { signin, user } = authContext 
+
+  console.log('user in login',user);
   
   const [password, setPassword] = useState<string>('');
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
@@ -70,7 +72,8 @@ const Login: React.FC = () => {
   return (
     <>
     {
-      user ? (<Navigate to="/profileUser" />): (<section className='min-h-screen flex flex-col justify-center items-center' style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover' }}>
+      user ? (user.user.is_admin ? (<Navigate to="/profileAdmin" />) :(<Navigate to="/profileUser" />)
+      ): (<section className='min-h-screen flex flex-col justify-center items-center' style={{ backgroundImage: `url(${bgImage})`, backgroundSize: 'cover' }}>
       <div>
         <NavLink to={'/'}>
           <img className='w-[250px] m-3' src={logo} alt="logo" />

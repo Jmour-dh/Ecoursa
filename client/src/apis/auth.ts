@@ -6,9 +6,8 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const signin = async (userAuth: UserAuth) => {
   try {
     const response = await axios.post(`${API_URL}/auth/signin`, userAuth);
-    const { token } = response.data; // Récupérer le token depuis la réponse
-    // Enregistrer le token dans le local storage ou dans les cookies
-    localStorage.setItem('token', token); // Exemple d'enregistrement dans le local storage
+    const { token } = response.data;
+    localStorage.setItem('token', token);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error) && error.response?.status === 404) {
