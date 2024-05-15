@@ -6,8 +6,6 @@ import {
   UseGuards,
   Req,
   Put,
-  Param,
-  ParseIntPipe,
   Get,
 } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
@@ -75,5 +73,14 @@ export class AuthController {
   @Get()
   getAll() {
     return this.authService.getAll();
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Post('logout')
+  logout(@Req() request: Request) {
+    const userId = request.user['id'];
+    const token = request.headers.authorization.split(' ')[1];
+    return this.authService.logout(userId, token);
   }
 }

@@ -25,7 +25,9 @@ model User {
   updated_at   DateTime      @updatedAt
   formations   Formation[]
   progressions Progression[]
+  revokedTokens RevokedToken[]
 }
+
 
 model Formation {
   id           Int           @id @default(autoincrement())
@@ -71,4 +73,15 @@ model Progression {
   formationId Int
   cours       Cours     @relation(fields: [coursId], references: [id])
   coursId     Int
+}
+
+model RevokedToken {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  token     String   @unique
+  revokedAt DateTime @default(now())
+
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@map("revoked_tokens")
 }

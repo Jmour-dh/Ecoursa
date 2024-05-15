@@ -167,4 +167,15 @@ export class AuthService {
       users.map(({ password, ...user }) => user)
     );
   }
+
+  async logout(userId: number, token: string) {
+    await this.PrismaService.revokedToken.create({
+      data: {
+        userId,
+        token,
+        revokedAt: new Date(),
+      },
+    });
+    return { data: 'Déconnexion réussie' };
+  }
 }
