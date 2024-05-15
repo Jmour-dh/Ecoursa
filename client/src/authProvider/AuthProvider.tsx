@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useLoaderData } from "react-router-dom";
-import { signin as login, signout as logout } from "../apis/auth";
+import { signin as login, signout as logout, getMe } from "../apis/auth";
 import { AuthContext, User } from "../context";
 
 interface Credentials {
-  firstname: string;
-  lastname: string;
   email: string;
-  imageProfile: string;
-  is_admin: boolean;
   password: string;
 }
 
@@ -19,21 +15,48 @@ interface AuthProviderProps {
 function AuthProvider({ children }: AuthProviderProps) {
   const initialUser = useLoaderData() as User | null;
   const [user, setUser] = useState<User | null>(initialUser);
+  const [token, setToken] = useState<string | null>(() => {
+    return localStorage.getItem("token");
+  });
+
+  useEffect(() => {
+    if (user && token) {
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("token");
+    }
+  }, [user, token]);
 
   async function signin(credentials: Credentials) {
-    const newUser = await login(credentials);
-    setUser(newUser);
+    const response = await login(credentials);
+    setUser(response.user);
+    setToken(response.token);
   }
 
   async function signout() {
     await logout();
     setUser(null);
+    setToken(null);
   }
+
+  useEffect(() => {
+    async function fetchUser() {
+      try {
+        const user = await getMe();
+        setUser(user);
+      } catch (error) {
+        console.error("Erreur lors de la récupération des informations utilisateur:", error);
+      }
+    }
+
+    fetchUser();
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         user,
+        token,
         signin,
         signout,
       }}

@@ -83,4 +83,13 @@ export class AuthController {
     const token = request.headers.authorization.split(' ')[1];
     return this.authService.logout(userId, token);
   }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get('me')
+  getLoggedInUser(@Req() request: Request) {
+    const userId = request.user['id'];
+    return this.authService.getUserById(userId);
+  }
+  
 }

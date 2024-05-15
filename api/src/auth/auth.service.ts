@@ -178,4 +178,18 @@ export class AuthService {
     });
     return { data: 'Déconnexion réussie' };
   }
+
+  async getUserById(userId: number) {
+    const user = await this.PrismaService.user.findUnique({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException("L'utilisateur n'existe pas");
+    }
+    
+    const { password, ...userData } = user;
+
+    return userData;
+  }
 }

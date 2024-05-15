@@ -1,4 +1,4 @@
-import  { createContext } from 'react';
+import { createContext } from 'react';
 
 export interface User {
   firstname: string;
@@ -10,6 +10,7 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
+  token: string | null;
   signin: (credentials: any) => Promise<void>;
   signout: () => Promise<void>;
 }
