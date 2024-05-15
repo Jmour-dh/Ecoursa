@@ -1,8 +1,11 @@
 import React from 'react'
+import Logout from '../../components/Logout'
 
 const ProfileUser: React.FC = () => {
   return (
-    <div>ProfileUser</div>
+    <div>ProfileUser
+      <Logout/>
+    </div>
   )
 }
 
