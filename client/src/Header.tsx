@@ -1,11 +1,23 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import logo from './assets/images/logo.png'
 import { FaChevronDown } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
+import { AuthContext } from "./context";
+import NavBar from './components/NavBar';
 
 const Header: React.FC = () => {
+  const authContext = useContext(AuthContext);
+
+  if (!authContext) {
+    return <div>Chargement...</div>;
+  }
+
+  const { user } = authContext;
   return (
-    <header className='bg-violent-violet-100 h-[80px] flex items-center justify-around font-roboto sticky top-0'>
+    <>
+    {
+      !user ? (
+        <header className='bg-violent-violet-100 h-[80px] flex items-center justify-around font-roboto sticky top-0'>
       <NavLink to= '/'>
       <img src={logo} alt="logo" />
       </NavLink>
@@ -28,6 +40,10 @@ const Header: React.FC = () => {
       </div>
 
     </header>
+      ):(null)
+    }
+    </>
+    
   );
 };
 
