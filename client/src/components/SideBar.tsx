@@ -13,10 +13,14 @@ import {
 import { FaGear } from "react-icons/fa6";
 import { IoMdAdd } from "react-icons/io";
 
-const SideBar: React.FC = () => {
-  const [showUtilisateurs, setShowUtilisateurs] = useState<Boolean>(false);
-  const [showCommunautes, setShowCommunautes] = useState<Boolean>(true);
-  const [isCollapsed, setIsCollapsed] = useState<Boolean>(false);
+interface SideBarProps {
+  isVisible: boolean;
+}
+
+const SideBar: React.FC<SideBarProps> = ({ isVisible }) => {
+  const [showUtilisateurs, setShowUtilisateurs] = useState<boolean>(false);
+  const [showCommunautes, setShowCommunautes] = useState<boolean>(true);
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
   const toggleUtilisateurs = () => {
     setShowUtilisateurs(!showUtilisateurs);
@@ -31,7 +35,7 @@ const SideBar: React.FC = () => {
   };
 
   return (
-    <div className={`bg-outer-space-200 h-full flex flex-col transition-all duration-300 ${isCollapsed ? "w-12" : "w-64"}`}>
+    <div className={`bg-outer-space-200 h-full flex flex-col transition-all duration-300 ${isCollapsed ? "w-12" : "w-64"} ${!isVisible && "hidden"}`}>
       <div className="h-[48px] border-b-2 border-outer-space-100 flex items-center justify-center">
         <img src={isCollapsed ? logo_two : logo} alt="logo" />
       </div>
@@ -52,7 +56,7 @@ const SideBar: React.FC = () => {
               <FaCaretDown
                 onClick={toggleUtilisateurs}
                 className={`transition-transform duration-300 ${
-                  showUtilisateurs ? "rotate-45" : "-rotate-90"
+                  showUtilisateurs ? "rotate+45" : "-rotate-90"
                 }`}
               />
             </div>

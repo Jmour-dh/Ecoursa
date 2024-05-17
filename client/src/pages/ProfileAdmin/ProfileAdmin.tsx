@@ -1,16 +1,23 @@
-import React from 'react'
-import Logout from '../../components/Logout'
+import React, { useState } from 'react'
 import NavBar from '../../components/NavBar'
 import SideBar from '../../components/SideBar'
 
 const ProfileAdmin: React.FC = () => {
+  const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarVisible(!isSidebarVisible);
+  };
+
   return (
     <section className='flex w-screen h-screen'>
-      <div className='w-fill h-full'>
-        <SideBar/>
-      </div>
+      {isSidebarVisible && (
+        <div className='w-fill h-full'>
+          <SideBar isVisible={isSidebarVisible} />
+        </div>
+      )}
       <div className='flex-1 w-full'>
-        <NavBar/>
+        <NavBar toggleSidebar={toggleSidebar} />
       </div>
     </section>
   )

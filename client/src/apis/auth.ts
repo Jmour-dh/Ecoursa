@@ -31,7 +31,6 @@ export const getMe = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log("data", response.data);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -52,16 +51,16 @@ export const signout = async () => {
     if (!token) {
       return null;
     }
-    const response = await axios.post(`${API_URL}/auth/logout`, {}, {  // Ajoutez un objet vide pour le corps de la requête
+    const response = await axios.post(`${API_URL}/auth/logout`, {}, {  
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    localStorage.removeItem("token"); // Supprimez le jeton du stockage local après la déconnexion réussie
+    localStorage.removeItem("token"); 
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
-      throw new Error("Une erreur s'est produite lors de la déconnexion: " + error.message); // Capturez l'erreur et affichez-la
+      throw new Error("Une erreur s'est produite lors de la déconnexion: " + error.message);
     } else {
       throw new Error("Une erreur s'est produite lors de la déconnexion");
     }
