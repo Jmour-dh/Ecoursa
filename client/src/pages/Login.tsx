@@ -71,7 +71,7 @@ const Login: React.FC = () => {
     <>
       {user ? (
         user.is_admin ? (
-          <Navigate to="/profileAdmin" />
+          <Navigate to="/profileAdmin/home" />
         ) : (
           <Navigate to="/profileUser" />
         )

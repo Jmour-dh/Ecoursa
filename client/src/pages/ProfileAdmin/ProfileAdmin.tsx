@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { Suspense, useState } from 'react';
 import NavBar from '../../components/NavBar';
 import SideBar from '../../components/SideBar';
+import { Outlet } from 'react-router-dom';
 
 const ProfileAdmin: React.FC = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
@@ -12,16 +13,24 @@ const ProfileAdmin: React.FC = () => {
   };
 
   return (
-    <section className='flex w-screen h-screen'>
-      {isSidebarVisible && (
-        <div className='w-fill h-full'>
-          <SideBar isVisible={isSidebarVisible} />
-        </div>
-      )}
-      <div className='flex-1 w-full'>
-        <NavBar status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
+    <section className='flex flex-col w-screen h-screen'>
+  <div className='flex-1 flex'>
+    {isSidebarVisible && (
+      <div className='w-fill h-full'>
+        <SideBar isVisible={isSidebarVisible} />
       </div>
-    </section>
+    )}
+    <div className='flex-1 w-full flex flex-col'>
+      <NavBar status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
+      <div className='flex-1'>
+        <Suspense fallback={<div>Chargement...</div>}>
+          <Outlet />  
+        </Suspense>
+      </div>
+    </div>
+  </div>
+</section>
+
   );
 }
 

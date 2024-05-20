@@ -4,7 +4,7 @@ import { AuthContext } from "../context";
 import { FaCaretRight } from "react-icons/fa";
 import { FaSun, FaGear } from "react-icons/fa6";
 import { MdOutlineLogout } from "react-icons/md";
-import {  RiMoonClearFill } from "react-icons/ri";
+import { RiMoonClearFill } from "react-icons/ri";
 import { NavLink } from 'react-router-dom';
 
 interface ModalProfileMenuProps {
@@ -57,7 +57,7 @@ const ModalProfileMenu: React.FC<ModalProfileMenuProps> = ({ status, setStatus, 
           </div>
         </div>
       </div>
-      <div className='w-full h-[48px] flex items-center justify-between pl-4' 
+      <div className={`w-full h-[48px] flex items-center justify-between pl-4 ${currentMenu === 'status' ? 'bg-gray-200' : 'hover:bg-gray-100'}`} 
            onMouseEnter={() => handleMouseEnter('status')} 
            onMouseLeave={handleMouseLeave}>
         <div className='flex items-center mr-2'>
@@ -70,21 +70,21 @@ const ModalProfileMenu: React.FC<ModalProfileMenuProps> = ({ status, setStatus, 
         <div className="w-[256px] h-fill shadow-md rounded-md absolute top-[170px] right-[256px]" 
              onMouseEnter={() => handleMouseEnter('status')} 
              onMouseLeave={handleMouseLeave}>
-          <div className='flex items-center ml-3 py-3' onClick={() => handleStatusChange('En ligne')}>
+          <div className='flex items-center ml-3 py-3 hover:bg-gray-100' onClick={() => handleStatusChange('En ligne')}>
             <div className='w-[10px] h-[10px] rounded-full bg-green-600 mr-3'></div>
             <div className='flex flex-col'>
               <p>En ligne</p>
               <p className='text-gray-400 text-xs'>Vous recevez des notifications</p>
             </div>
           </div>
-          <div className='flex items-center ml-3 py-3' onClick={() => handleStatusChange('Occupé')}>
+          <div className='flex items-center ml-3 py-3 hover:bg-gray-100' onClick={() => handleStatusChange('Occupé')}>
             <div className='w-[10px] h-[10px] rounded-full bg-orange-600 mr-3'></div>
             <div className='flex flex-col'>
               <p>Occupé</p>
               <p className='text-gray-400 text-xs'>Vous ne recevez pas de notifications</p>
             </div>
           </div>
-          <div className='flex items-center ml-3 py-3' onClick={() => handleStatusChange('Hors ligne')}>
+          <div className='flex items-center ml-3 py-3 hover:bg-gray-100' onClick={() => handleStatusChange('Hors ligne')}>
             <div className='w-[10px] h-[10px] rounded-full bg-black mr-3'></div>
             <div className='flex flex-col'>
               <p>Hors ligne</p>
@@ -93,7 +93,7 @@ const ModalProfileMenu: React.FC<ModalProfileMenuProps> = ({ status, setStatus, 
           </div>
         </div>
       )}
-      <div className='w-full h-[48px] flex items-center justify-between pl-4' 
+      <div className={`w-full h-[48px] flex items-center justify-between pl-4 ${currentMenu === 'theme' ? 'bg-gray-200' : 'hover:bg-gray-100'}`} 
            onMouseEnter={() => handleMouseEnter('theme')} 
            onMouseLeave={handleMouseLeave}>
         <div className='flex items-center mr-2'>
@@ -103,26 +103,26 @@ const ModalProfileMenu: React.FC<ModalProfileMenuProps> = ({ status, setStatus, 
         <FaCaretRight className='mr-2' />
       </div>
       {currentMenu === 'theme' && (
-        <div className="w-[256px] h-fill shadow-md rounded-md absolute top-[218px] right-[256px]" 
+        <div className="w-[256px] h-fill shadow-md rounded-md absolute top-[218px] right-[256px] bg-white" 
              onMouseEnter={() => handleMouseEnter('theme')} 
              onMouseLeave={handleMouseLeave}>
-          <div className='flex items-center ml-3 py-3' onClick={() => handleThemeChange('Clair')}>
+          <div className='flex items-center ml-3 py-3 hover:bg-gray-100' onClick={() => handleThemeChange('Clair')}>
             <FaSun/>
               <p className='ml-3'>Mode Clair</p>
           </div>
-          <div className='flex items-center ml-3 py-3' onClick={() => handleThemeChange('Sombre')}>
+          <div className='flex items-center ml-3 py-3 hover:bg-gray-100' onClick={() => handleThemeChange('Sombre')}>
           <RiMoonClearFill/>
               <p className='ml-3'>Mode Sombre</p>
           </div>
         </div>
       )}
-      <div className='w-full h-[48px] flex items-center justify-between pl-4 border-b-2'>
+      <div className='w-full h-[48px] flex items-center justify-between pl-4 border-b-2 hover:bg-gray-100'>
         <div className='flex items-center mr-2'>
           <FaGear className='mr-3' />
           <p>Paramètre</p>
         </div>
       </div>
-      <div className='w-full h-[48px] flex items-center justify-between pl-4 border-b-2'>
+      <div className='w-full h-[48px] flex items-center justify-between pl-4 border-b-2 hover:bg-gray-100'>
         <div className='flex items-center mr-2'>
           <MdOutlineLogout className='mr-3' />
           <NavLink onClick={() => signout()} to="/">Déconnexion</NavLink>
