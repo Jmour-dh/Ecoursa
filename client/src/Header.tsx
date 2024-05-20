@@ -3,7 +3,6 @@ import logo from './assets/images/logo.png'
 import { FaChevronDown } from "react-icons/fa6";
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from "./context";
-import NavBar from './components/NavBar';
 
 const Header: React.FC = () => {
   const authContext = useContext(AuthContext);

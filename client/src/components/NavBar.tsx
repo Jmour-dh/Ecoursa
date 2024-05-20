@@ -5,9 +5,13 @@ import ModalProfileMenu from './ModalProfileMenu';
 
 interface NavBarProps {
   toggleSidebar: () => void;
+  status: string;
+  setStatus: (status: string) => void;
+  theme: string;
+  setTheme: (theme: string) => void;
 }
 
-const NavBar: React.FC<NavBarProps> = ({ toggleSidebar }) => {
+const NavBar: React.FC<NavBarProps> = ({ toggleSidebar, status, setStatus, theme, setTheme }) => {
   const [showProfileMenu, setShowProfileMenu] = useState<boolean>(false);
   const profileRef = useRef<HTMLDivElement>(null);
 
@@ -28,6 +32,19 @@ const NavBar: React.FC<NavBarProps> = ({ toggleSidebar }) => {
     };
   }, []);
 
+  const getBorderColor = () => {
+    switch (status) {
+      case 'En ligne':
+        return 'border-green-500';
+      case 'Occupé':
+        return 'border-orange-500';
+      case 'Hors ligne':
+        return 'border-black';
+      default:
+        return 'border-gray-500';
+    }
+  };
+
   return (
     <nav className='bg-outer-space-300 h-[48px] flex items-center justify-between sticky top-0 w-full px-4'>
       <div>
@@ -36,18 +53,18 @@ const NavBar: React.FC<NavBarProps> = ({ toggleSidebar }) => {
       <div ref={profileRef} className="relative">
         <img
           onClick={handleProfileClick}
-          className='w-[28px] h-[28px] rounded-full border-2 border-green-500 cursor-pointer'
+          className={`w-[28px] h-[28px] rounded-full border-2 cursor-pointer ${getBorderColor()}`}
           src={profileImage}
           alt="profileImage"
         />
         {showProfileMenu && (
           <div className="absolute right-0 mt-0">
-            <ModalProfileMenu />
+            <ModalProfileMenu status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} />
           </div>
         )}
       </div>
     </nav>
-  )
+  );
 }
 
 export default NavBar;

@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import NavBar from '../../components/NavBar'
-import SideBar from '../../components/SideBar'
+import React, { useState } from 'react';
+import NavBar from '../../components/NavBar';
+import SideBar from '../../components/SideBar';
 
 const ProfileAdmin: React.FC = () => {
   const [isSidebarVisible, setIsSidebarVisible] = useState<boolean>(true);
+  const [status, setStatus] = useState<string>('En ligne');
+  const [theme, setTheme] = useState<string>('Clair');
 
   const toggleSidebar = () => {
     setIsSidebarVisible(!isSidebarVisible);
@@ -17,10 +19,10 @@ const ProfileAdmin: React.FC = () => {
         </div>
       )}
       <div className='flex-1 w-full'>
-        <NavBar toggleSidebar={toggleSidebar} />
+        <NavBar status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
       </div>
     </section>
-  )
+  );
 }
 
-export default ProfileAdmin
+export default ProfileAdmin;
