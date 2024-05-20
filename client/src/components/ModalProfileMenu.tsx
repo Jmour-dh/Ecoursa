@@ -47,7 +47,7 @@ const ModalProfileMenu: React.FC<ModalProfileMenuProps> = ({ status, setStatus, 
   };
 
   return (
-    <div className='bg-white shadow-md rounded-md w-[256px] h-full relative'>
+    <div className='bg-white shadow-md rounded-md w-[256px] h-full relative '>
       <div className='w-full h-146px relative'>
         <img className='w-full h-full object-cover rounded-tl-md rounded-tr-md' src={imageClear} alt="menuImage" />
         <div className='absolute top-1/2 left-0 w-full text-center text-white transform -translate-y-1/2'>

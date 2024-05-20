@@ -66,6 +66,7 @@ export const router = createBrowserRouter([
             <ProfileAdmin />
           </ProtectedRoute>
         ),
+
         children: [
           {
             path: "/profileAdmin/home",
@@ -94,7 +95,6 @@ export const router = createBrowserRouter([
               },
             ],
           },
-          
         ],
       },
     ],

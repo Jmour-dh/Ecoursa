@@ -33,10 +33,10 @@ const SideBar: React.FC<SideBarProps> = ({ isVisible }) => {
       <div className="h-[48px] border-b-2 border-outer-space-100 flex items-center justify-center">
         <img src={isCollapsed ? logo_two : logo} alt="logo" />
       </div>
-      <div className="h-[56px] border-b-2 border-outer-space-100 flex items-center hover:bg-slate-500">
+      <div className="h-[56px] border-b-2 border-outer-space-100 flex items-center hover:bg-slate-500 ">
         <NavLink
           to="/profileAdmin/home"
-          className={({ isActive }) => isActive ? "flex items-center ml-2 text-blue-500" : "flex items-center ml-2"}
+          className={({ isActive }) => isActive ? "flex items-center ml-2 text-blue-500 " : "flex items-center ml-2"}
         >
           <FaHome className="mr-2 text-md" /> {!isCollapsed && "Accueil"}
         </NavLink>

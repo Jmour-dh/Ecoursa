@@ -1,8 +1,11 @@
 import React from 'react'
+import BanniereImageProfile from '../../components/BanniereImageProfile'
 
 const Home : React.FC = () => {
   return (
-    <div>Home</div>
+    <>
+    <BanniereImageProfile />
+    </>
   )
 }
 
