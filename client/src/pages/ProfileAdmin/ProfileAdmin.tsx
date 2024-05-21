@@ -21,8 +21,8 @@ const ProfileAdmin: React.FC = () => {
       </div>
     )}
     <div className='flex-1 w-full flex flex-col'>
-      <NavBar  status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
-      <div className='flex-1'>
+      <NavBar status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
+      <div >
         <Suspense fallback={<div>Chargement...</div>}>
           <Outlet />  
         </Suspense>

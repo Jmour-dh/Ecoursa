@@ -29,7 +29,7 @@ const SideBar: React.FC<SideBarProps> = ({ isVisible }) => {
   };
 
   return (
-    <div className={`bg-outer-space-200 h-full flex flex-col transition-all duration-300 ${isCollapsed ? "w-12" : "w-64"} ${!isVisible && "hidden"}`}>
+    <div className={`bg-outer-space-200 h-screen flex flex-col transition-all duration-300 ${isCollapsed ? "w-12" : "w-64"} ${!isVisible && "hidden"}`}>
       <div className="h-[48px] border-b-2 border-outer-space-100 flex items-center justify-center">
         <img src={isCollapsed ? logo_two : logo} alt="logo" />
       </div>
@@ -65,7 +65,7 @@ const SideBar: React.FC<SideBarProps> = ({ isVisible }) => {
       </div>
       {!isCollapsed && (
         <div className="min-h-[56px] border-b-2 border-outer-space-100 flex flex-col justify-center ">
-          <div className="min-h-[56px] flex items-center justify-between ml-2 hover:bg-slate-500">
+          <div className="min-h-[56px] flex items-center justify-between pl-2 hover:bg-slate-500">
             <div className="flex items-center ">
               <FaCaretDown
                 onClick={toggleCommunautes}
