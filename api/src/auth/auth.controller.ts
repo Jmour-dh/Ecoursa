@@ -7,6 +7,7 @@ import {
   Req,
   Put,
   Get,
+  Param
 } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
@@ -91,5 +92,12 @@ export class AuthController {
     const userId = request.user['id'];
     return this.authService.getUserById(userId);
   }
-  
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Delete('delete/:id')
+  async deleteUserByAdmin(@Param('id') id: string){
+    const idAsNumber = parseInt(id, 10);
+    return this.authService.deleteAccountByAdmin(idAsNumber);
+  }
 }

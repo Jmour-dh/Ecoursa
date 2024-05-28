@@ -192,4 +192,12 @@ export class AuthService {
 
     return userData;
   }
+
+  async deleteAccountByAdmin(id: number) {
+    await this.PrismaService.user.delete({ where: { id } });
+    return { data: 'Compte supprimé par un administrateur' };
+  }
+  
+  
+
 }
