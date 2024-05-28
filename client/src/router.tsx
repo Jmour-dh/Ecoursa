@@ -24,6 +24,7 @@ const Formations = lazy(
 const ListOfFormations = lazy(
   () => import("./pages/ProfileAdmin/Formations/ListOfFormations")
 );
+const AddUser = lazy(() => import("./pages/ProfileAdmin/Users/AddUser"));
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
             element: <Users />,
             children: [
               { path: "list", element: <ListOfUsers /> },
+              {
+                path: "new",
+                element: <AddUser />,
+              },
               {
                 index: true,
                 loader: async () => redirect("/profileAdmin/users/list"),

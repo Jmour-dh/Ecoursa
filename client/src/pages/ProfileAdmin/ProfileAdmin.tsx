@@ -20,7 +20,7 @@ const ProfileAdmin: React.FC = () => {
         <SideBar isVisible={isSidebarVisible} />
       </div>
     )}
-    <div className='flex-1 w-full flex flex-col'>
+    <div className='flex-1 w-full h-full flex flex-col'>
       <NavBar status={status} setStatus={setStatus} theme={theme} setTheme={setTheme} toggleSidebar={toggleSidebar} />
       <div >
         <Suspense fallback={<div>Chargement...</div>}>

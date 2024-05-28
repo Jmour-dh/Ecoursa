@@ -1,13 +1,13 @@
-import React, { useState, ChangeEvent, FormEvent } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import logo from "../assets/images/logo.png";
-import { FaLock } from "react-icons/fa";
-import { LiaEyeSolid, LiaEyeSlashSolid } from "react-icons/lia";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 import * as yup from "yup";
-import { createUser } from "../apis/users";
-import { UserCreate } from "../interfaces/User.interface";
+import { useNavigate } from "react-router-dom";
+import { LiaEyeSolid, LiaEyeSlashSolid } from "react-icons/lia";
+import { UserCreate } from "../../../interfaces/User.interface";
+import { createUser } from "../../../apis/users";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const Register: React.FC = () => {
+const AddUser: React.FC = () => {
   const navigate = useNavigate();
   const [passwordVisible, setPasswordVisible] = useState<boolean>(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] =
@@ -76,7 +76,10 @@ const Register: React.FC = () => {
       setErrors({});
       setGeneralError(null);
       await createUser(formData);
-      navigate("/login");
+      toast.success("Utilisateur créé avec succès !");
+      setTimeout(() => {
+        navigate("/profileAdmin/users/list");
+      }, 3000);
     } catch (err: any) {
       if (err instanceof yup.ValidationError) {
         const validationErrors: { [key: string]: string } = {};
@@ -93,61 +96,47 @@ const Register: React.FC = () => {
   };
 
   return (
-    <section className="bg-slate-200 min-h-screen flex flex-col justify-center items-center">
-      <div>
-        <NavLink to={"/"}>
-          <img className="w-[250px] m-3" src={logo} alt="logo" />
-        </NavLink>
-        <form
-          onSubmit={handleSubmit}
-          className="w-[385px] h-fill bg-violent-violet-200 rounded-lg flex flex-col items-center pb-3"
-        >
-          <div className=" w-[385px] flex items-center justify-between p-4">
-            <h4 className="font-bold">Inscription</h4>
-            <FaLock className="text-gray-400" />
-          </div>
-          {generalError && (
-            <div className="text-red-500 mb-2">{generalError}</div>
-          )}
-          <div className="flex w-[355px] justify-between">
-            <div className="flex flex-col w-[43%] ">
-              <label className="mb-1" htmlFor="firstname">
-                Prénom
-              </label>
-              <input
-                className="h-[34px] px-2 rounded focus:outline-none"
-                type="text"
-                id="firstname"
-                value={formData.firstname}
-                onChange={handleInputChange}
-              />
-              {errors.firstname && (
-                <p className="text-red-500 text-xs">{errors.firstname}</p>
-              )}
-            </div>
-            <div className="flex flex-col w-[43%]">
-              <label className="mb-1" htmlFor="lastname">
-                Nom
-              </label>
-              <input
-                className="h-[34px] px-2 rounded focus:outline-none"
-                type="text"
-                id="lastname"
-                value={formData.lastname}
-                onChange={handleInputChange}
-              />
-              {errors.lastname && (
-                <p className="text-red-500 text-xs">{errors.lastname}</p>
-              )}
-            </div>
-          </div>
-          <div className="flex flex-col w-[355px] my-2">
-            <label className="mb-1" htmlFor="email">
-              Email
-            </label>
+    <section className="w-full flex flex-col bg-gray-100">
+      <div className="m-2">
+        <h2 className="text-xl p-3 shadow-md">
+          Ajouter un nouveau utilisateur
+        </h2>
+      </div>
+      <div className="flex justify-center items-center h-[84.1vh]">
+        <div className="flex bg-white w-2/4 min-h-[300px] shadow-md rounded-xl">
+          <form className="flex flex-col m-4 w-full" onSubmit={handleSubmit}>
+            {generalError && (
+              <div className="text-red-500 mb-2 mx-auto">{generalError}</div>
+            )}
+            <label htmlFor="firstname">Prénom*</label>
             <input
-              className="h-[34px] px-2 rounded focus:outline-none"
+              className="h-[34px] px-2 mb-2 rounded focus:outline-none border border-violet-300"
+              type="text"
+              name="firstname"
+              id="firstname"
+              value={formData.firstname}
+              onChange={handleInputChange}
+            />
+            {errors.firstname && (
+              <p className="text-red-500 text-xs">{errors.firstname}</p>
+            )}
+            <label htmlFor="lastname">Nom*</label>
+            <input
+              className="h-[34px] px-2 mb-2 rounded focus:outline-none border border-violet-300"
+              type="text"
+              name="lastname"
+              id="lastname"
+              value={formData.lastname}
+              onChange={handleInputChange}
+            />
+            {errors.lastname && (
+              <p className="text-red-500 text-xs">{errors.lastname}</p>
+            )}
+            <label htmlFor="email">Email*</label>
+            <input
+              className="h-[34px] px-2 mb-2 rounded focus:outline-none border border-violet-300"
               type="email"
+              name="email"
               id="email"
               value={formData.email}
               onChange={handleInputChange}
@@ -155,16 +144,13 @@ const Register: React.FC = () => {
             {errors.email && (
               <p className="text-red-500 text-xs">{errors.email}</p>
             )}
-          </div>
-          <div className="flex flex-col w-[355px] my-2">
-            <label className="mb-1" htmlFor="password">
-              Mot de passe
-            </label>
+            <label htmlFor="password">Mot de passe*</label>
             <div className="relative">
               <input
-                className="w-[355px] h-[34px] rounded focus:outline-none px-2"
-                id="password"
+                className="h-[34px] w-full px-2 mb-2 rounded focus:outline-none border border-violet-300"
                 type={passwordVisible ? "text" : "password"}
+                name="password"
+                id="password"
                 value={formData.password}
                 onChange={handleInputChange}
               />
@@ -180,16 +166,16 @@ const Register: React.FC = () => {
                 <p className="text-red-500 text-xs">{errors.password}</p>
               )}
             </div>
-          </div>
-          <div className="flex flex-col w-[355px] my-2">
-            <label className="mb-1" htmlFor="confirmPassword">
-              Confirmation de mot de passe
+
+            <label htmlFor="confirmPassword">
+              Confirmation de mot de passe*
             </label>
             <div className="relative">
               <input
-                className="w-[355px] h-[34px] rounded focus:outline-none px-2"
-                id="confirmPassword"
+                className="h-[34px] w-full px-2 mb-2 rounded focus:outline-none border border-violet-300"
                 type={confirmPasswordVisible ? "text" : "password"}
+                name="confirmPassword"
+                id="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
               />
@@ -209,33 +195,19 @@ const Register: React.FC = () => {
                 <p className="text-red-500 text-xs">{errors.confirmPassword}</p>
               )}
             </div>
-          </div>
-          <button
-            type="submit"
-            className="w-[345px] text-lg text-white bg-violent-violet-600 px-5 py-2 m-2 rounded hover:bg-violent-violet-300 hover:text-black"
-          >
-            Inscription gratuite
-          </button>
-        </form>
-        <p className="mx-5 mt-3 text-sm">
-          En créant un compte vous acceptez les
-        </p>
-        <NavLink
-          to={"#"}
-          className="mx-5 text-sm underline decoration-dotted text-violent-violet-700"
-        >
-          Conditions générales d'utilisation
-        </NavLink>
-        <p className="mx-5 mt-3 text-sm">Vous avez déjà un compte?</p>
-        <NavLink
-          to={"/login"}
-          className="mx-5 text-sm underline text-violent-violet-700"
-        >
-          Connectez-vous
-        </NavLink>
+
+            <button
+              type="submit"
+              className="w-[300px] mx-auto text-lg text-white bg-green-600 px-5 py-2 m-2 rounded hover:bg-green-300 hover:text-black"
+            >
+              Valider
+            </button>
+          </form>
+        </div>
       </div>
+      <ToastContainer />
     </section>
   );
 };
 
-export default Register;
+export default AddUser;

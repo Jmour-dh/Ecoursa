@@ -9,3 +9,12 @@ export interface User {
   updated_at: Date;
   is_admin: boolean;
 }
+
+export interface UserCreate {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+}
+
