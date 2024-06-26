@@ -1,3 +1,4 @@
+import { UploadService } from '../upload/upload.service';
 import {
   Controller,
   Post,
@@ -7,7 +8,9 @@ import {
   Req,
   Put,
   Get,
-  Param
+  Param,
+  UseInterceptors,
+  UploadedFile
 } from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto';
 import { AuthService } from './auth.service';
@@ -19,11 +22,15 @@ import { Request } from 'express';
 import { DeleteAccountDto } from './dto/deleteAccount.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { UpdateAccountDto } from './dto/updateAccount.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { UploadedFile as UploadedFileType } from '../upload/interfaces/uploadFile.interface';
 
 @ApiTags('Authentification')
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService,
+    private  uploadService: UploadService
+  ) {}
 
   @Post('signup')
   async signup(@Body() signupDto: SignupDto) {
@@ -63,10 +70,21 @@ export class AuthController {
   @ApiBearerAuth()
   @UseGuards(AuthGuard('jwt'))
   @Put('update')
-  update(@Body() updateAccountDto: UpdateAccountDto, @Req() request: Request) {
-    const userId = request.user['id'];
-    const email =request.user['email'];
-    return this.authService.update(userId,email, updateAccountDto);
+  @UseInterceptors(FileInterceptor('imageProfile'))
+  async update(
+    @UploadedFile() file: UploadedFileType,
+    @Body() updateAccountDto: UpdateAccountDto,
+    @Req() request: any
+  ) {
+    const userId = request.user.id;
+    const email = request.user.email;
+
+    if (file) {
+      const imageUrl = await this.uploadService.uploadFile(file);
+      updateAccountDto.imageProfile = imageUrl;
+    }
+
+    return this.authService.update(userId, email, updateAccountDto);
   }
 
   @ApiBearerAuth()
@@ -91,6 +109,14 @@ export class AuthController {
   getLoggedInUser(@Req() request: Request) {
     const userId = request.user['id'];
     return this.authService.getUserById(userId);
+  }
+
+  @ApiBearerAuth()
+  @UseGuards(AuthGuard('jwt'))
+  @Get(':id')
+  async getUserById(@Param('id') id: string){
+    const idAsNumber = parseInt(id, 10);
+    return this.authService.getUserById(idAsNumber);
   }
 
   @ApiBearerAuth()

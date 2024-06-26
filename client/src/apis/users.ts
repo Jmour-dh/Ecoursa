@@ -64,3 +64,24 @@ export const deleteUserByAdmin = async (userId: number) => {
   }
 };
 
+export const getUserById = async (userId: string) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      throw new Error("Token non trouvé");
+    }
+    const response = await axios.get(`${API_URL}/auth/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error("Une erreur s'est produite lors de la récupération de l'utilisateur");
+    } else {
+      throw new Error("Une erreur s'est produite lors de la récupération de l'utilisateur");
+    }
+  }
+};
+

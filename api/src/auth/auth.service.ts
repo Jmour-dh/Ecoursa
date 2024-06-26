@@ -19,6 +19,7 @@ import { UpdateAccountDto } from './dto/updateAccount.dto';
 
 @Injectable()
 export class AuthService {
+ 
   constructor(
     private readonly PrismaService: PrismaService,
     private readonly utilsService: UtilsService,
@@ -82,6 +83,7 @@ export class AuthService {
         imageProfile: user.imageProfile,
         is_admin: user.is_admin,
       },
+
     };
   }
 

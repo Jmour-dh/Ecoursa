@@ -25,6 +25,7 @@ const ListOfFormations = lazy(
   () => import("./pages/ProfileAdmin/Formations/ListOfFormations")
 );
 const AddUser = lazy(() => import("./pages/ProfileAdmin/Users/AddUser"));
+const UpdateUser= lazy (() => import ('./pages/ProfileAdmin/Users/UpdateUser'))
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ export const router = createBrowserRouter([
               {
                 path: "new",
                 element: <AddUser />,
+              },
+              {
+                path: "updateUser/:userId",
+                element: <UpdateUser />,
               },
               {
                 index: true,

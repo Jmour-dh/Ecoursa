@@ -137,7 +137,7 @@ const ListOfUsers: React.FC = () => {
                 {new Date(user.updated_at).toLocaleDateString()}
               </td>
               <td className="px-4 py-4 text-center whitespace-nowrap flex justify-center items-center space-x-2 mt-1">
-                <NavLink to={"#"}>
+                <NavLink to={`../updateUser/${user.id}`}>
                   <FaUserEdit className="text-blue-500 hover:text-blue-700 text-lg" />
                 </NavLink>
                 <MdDelete
@@ -160,13 +160,12 @@ const ListOfUsers: React.FC = () => {
         isOpen={isModalOpen}
         onRequestClose={() => setIsModalOpen(false)}
         title="Confirmation de suppression"
-        message="Êtes-vous sûr de vouloir supprimer cet utilisateur ? Cette action est irréversible."
+        message="Êtes-vous sûr de vouloir supprimer cet utilisateur? Cette action est irréversible."
         onConfirm={handleDeleteUser}
       />
       <ToastContainer
         position="top-center"
-        
-        autoClose={3000}
+        autoClose={1000}
         hideProgressBar={false}
       />
     </section>

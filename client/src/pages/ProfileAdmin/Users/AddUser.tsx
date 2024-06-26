@@ -79,7 +79,7 @@ const AddUser: React.FC = () => {
       toast.success("Utilisateur créé avec succès !");
       setTimeout(() => {
         navigate("/profileAdmin/users/list");
-      }, 3000);
+      }, 1000);
     } catch (err: any) {
       if (err instanceof yup.ValidationError) {
         const validationErrors: { [key: string]: string } = {};
@@ -205,7 +205,7 @@ const AddUser: React.FC = () => {
           </form>
         </div>
       </div>
-      <ToastContainer />
+      <ToastContainer position="top-center" />
     </section>
   );
 };
